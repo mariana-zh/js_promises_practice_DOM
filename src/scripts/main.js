@@ -4,7 +4,10 @@ let rightClick = false;
 let leftClick = false;
 
 const firstPromise = new Promise((resolve, reject) => {
-  document.addEventListener('click', () => {
+  document.addEventListener('click', (even) => {
+    if (even.button !== 0) {
+      return;
+    }
     resolve('First promise was resolved');
   });
 
@@ -14,23 +17,23 @@ const firstPromise = new Promise((resolve, reject) => {
 });
 
 const secondPromise = new Promise((resolve) => {
-  document.addEventListener('click', () => {
-    resolve('Second promise was resolved');
-  });
-
-  document.addEventListener('contextmenu', () => {
-    resolve('Second promise was resolved');
+  document.addEventListener('click', (even) => {
+    if (even.button === 0 || even.button === 2) {
+      resolve('Second promise was resolved');
+    }
   });
 });
 
 const thirdPromise = new Promise((resolve) => {
-  document.addEventListener('click', () => {
-    leftClick = true;
-    checkForBoth();
-  });
+  document.addEventListener('click', (even) => {
+    if (even.button === 0) {
+      leftClick = true;
+    }
 
-  document.addEventListener('contextmenu', () => {
-    rightClick = true;
+    if (even.button === 2) {
+      rightClick = true;
+    }
+
     checkForBoth();
   });
 
